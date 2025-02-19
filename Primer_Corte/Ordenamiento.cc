@@ -19,7 +19,6 @@ void QuickSort(vector<unsigned char> *vector, int start, int end, int chose) {
         pivote = vector->at((start + end) / 2);
     } else if (chose == 3) {
         pivote = vector->at(end);
-        //Cambio
     }
 
     do {

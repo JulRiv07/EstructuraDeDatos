@@ -19,6 +19,7 @@ class RGBcolor {
     RGBcolor(int c){
         cout << "Constructor 2 called: " << endl;
         red = c;
+        //Comment
         green = c;
         blue = c;
     }
