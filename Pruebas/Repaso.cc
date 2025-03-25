@@ -439,16 +439,12 @@ class ListaCdoble{
             size--;
         }
 
-        void print() {
-            if (empty()) {
-                return;
-            }
-            
-            Nodo *current = last->getnext();  // Apuntar al primer nodo
+        void print() {    
+            Nodo *current = last->getnext(); 
             do {
                 cout << current->data << " ";
                 current = current->getnext();
-            } while (current != last->getnext());  // Detenerse cuando se vuelva al inicio
+            } while (current != last->getnext());
             
             cout << "\n";
         }
@@ -460,9 +456,10 @@ int main() {
     do {
         cout << "\n===== MENU PRINCIPAL =====" << endl;
         cout << "1. Probar Vector" << endl;
-        cout << "2. Probar Lista Simple" << endl;
-        cout << "3. Probar Lista Doble" << endl;
-        cout << "4. Probar Lista Circular" << endl;
+        cout << "2. Probar Lista simplemente enlazada" << endl;
+        cout << "3. Probar Lista doblemente enlazada" << endl;
+        cout << "4. Probar Lista circular simplemente enlazada" << endl;
+        cout << "4. Probar Lista circular doblemente enlazada " << endl;
         cout << "0. Salir" << endl;
         cout << "Seleccione una opción: ";
         cin >> opcion;
@@ -487,11 +484,8 @@ int main() {
             case 2: {
                 cout << "\n--- Prueba de Lista Simple ---" << endl;
                 ListaSimple<int> lista;
-                cout << "Agregando 5 al final..." << endl;
                 lista.pushback(5);
-                cout << "Agregando 1 al frente..." << endl;
                 lista.pushfront(1);
-                cout << "Agregando 10 al final..." << endl;
                 lista.pushback(10);
                 lista.print();
 
@@ -507,11 +501,8 @@ int main() {
             case 3: {
                 cout << "\n--- Prueba de Lista Doble ---" << endl;
                 ListaDoble<int> lista;
-                cout << "Agregando 100 al final..." << endl;
                 lista.pushback(100);
-                cout << "Agregando 50 al inicio..." << endl;
                 lista.pushfront(50);
-                cout << "Agregando 150 al final..." << endl;
                 lista.pushback(150);
                 lista.print();
 
@@ -559,10 +550,10 @@ int main() {
                 break;
             }
             case 0:
-                cout << "Saliendo del programa..." << endl;
+                cout << "Baii" << endl;
                 break;
             default:
-                cout << "Opción inválida, intente de nuevo." << endl;
+                cout << "Opción invalida" << endl;
         }
     } while (opcion != 0);
 
