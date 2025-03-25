@@ -11,7 +11,7 @@ private:
     unsigned int capacity_; //Capacidad del vector
     unsigned int size_; //Tamaño actual del vector 
 
-    void resize() { // Funcion resize (private!)
+    void resizeP1() { // Funcion resize (private!)
         cout << "Resize" << endl; // Se muestra que se hizo un resize
         unsigned int capacity2 = capacity_ * 1.5; // Se modifica la capacidad sumandole la mitad de la que se tenia
         T* storage2 = new T[capacity2]; // Se direcciona storage2 con el mismo espacio de memoria de capacity2
@@ -29,7 +29,7 @@ private:
 
 public:
     Vector() { // Constructor Vector 
-        capacity_ = 5; // Capacidad de 5
+        capacity_ = 4; // Capacidad de 5
         storage_ = new T[capacity_]; // Storage_ guarda espacio de memoria dinamica de tamaño capácity y tipo T 
         size_ = 0; // Tamaño actual 0
     }
@@ -47,8 +47,12 @@ public:
         delete[] storage_; // Se libera memoria
     }
 
-    unsigned int size() const { // El const hace que no se modifique el estado del objeto
-        return size_; // Retorna el tamaño
+    unsigned int size_() const { // El const hace que no se modifique el estado del objeto
+        return size_; // Retorna el tamaño actual
+    }
+
+    unsigned int capacity_() const { // El const hace que no se modifique el estado del objeto
+        return capacity_; // Retorna el tamaño permitido
     }
 
     T& at(unsigned int pos) { 
@@ -76,10 +80,10 @@ public:
         return storage_[index]; // Retorna el elemento que se encuenta en la posicion index
     }
 
-    void push_back(const T& elem) {// Coloca un elemento al final 
+    void push_back1(const T& elem) {// Coloca un elemento al final 
         // El valor elem no se modificara a lo largo de la funcion por const
         if (size_ == capacity_) { //Si se alcanzo la capacidad maxima primero se hace un resize
-            resize();
+            resizeP1();
         }
         storage_[size_] = elem; // Se agrega el elemento en la posicion size, sabiendo que siempre esta en una posicion adelantada
         size_++; // Se avanza en el vector
@@ -97,6 +101,11 @@ public:
         }
         cout << endl; // Salto de linea al final
     }
+
+    public:
+    unsigned int Size() const { return size_; }       // Método para obtener el tamaño
+    unsigned int Capacity() const { return capacity_; } // Método para obtener la capacidad
+
 };
 
 class complex { // Clase complejos
@@ -129,14 +138,29 @@ ostream& operator<<(ostream& os, const complex& c) {
 }
 
 int main() {
-    cout << "Ejecutando vectores!" << endl; //Mensaje al usuario
+    Vector<int> myVector;
 
-    Vector<int> x(10, 0); //Vector de tipo int llamado x con 10 ceros 
-    cout << "x " << x.size() << endl; // Imprime el tamaño del vector
-    x.print(); // Imprime el vector
+    // Test push_back
+    myVector.push_back1(10);
+    myVector.push_back1(20);
+    myVector.push_back1(30);
     
-    x.at(5) = 100; //agrega un elemento en esa posicion
-    x.print(); // Imprime el vector con esta modificacion
+    cout << myVector.Size()<< endl; // Expected: 3
+    cout << myVector.Capacity() << endl; // Expected: Initial capacity, e.g., 4 or 8
 
+    // Test pop_back
+    myVector.pop_back();
+    cout << myVector.size() << endl; // Expected: 2
+
+    // Test at with valid and invalid indices
+    cout << myVector.at(0) << endl; // Expected: 10
+    cout << myVector.at(1) << endl; // Expected: 20
+
+    // Border case: Accessing an out-of-bounds index
+    cout << myVector.at(2) << endl; // Should crash!
+
+    // Border case: pop_back on empty vector
+    Vector<int> emptyVector;
+    emptyVector.pop_back(); // should crash!
     return 0; 
 }

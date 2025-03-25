@@ -34,7 +34,7 @@ class Vector{
         }
     
     private: // METODOS PRIVADOS
-        void resize(){
+        void resizeP1(){
             capacity_ *= 1.5; // Aumentamos la nueva capacidad del vector
             int *storage_2 = new Type[capacity_]; // Creamos un arreglo con la nueva capacidad
 
@@ -49,7 +49,7 @@ class Vector{
     public: // METODOS PUBLICOS
         void push_back(const Type *elem){
             if(size_ == capacity_){
-                resize();
+                resizeP1();
             }
             storage_[size_] = *elem; // Ingresa un elemento al vector, por la cola
             size_ ++; // Aumenta la cantidad de elementos en el vector
@@ -66,7 +66,7 @@ class Vector{
         Type& at(const unsigned int pos) const { // UNFINISHED
             assert(pos >= 0 && pos < size_); // de la libreria <cassert>, recibe una expresion booleana
             return storage_[pos];
-        }
+        } 
         
         void print(){
             for(unsigned int i = 0; i < size(); i++) // Usamos el metodo size() dentro de la misma class

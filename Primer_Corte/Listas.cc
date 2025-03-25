@@ -47,7 +47,7 @@ class List {
             Node *newNode = new Node(elem); //Se crea un nuevo nodo y se le asigna memoria dinamica
             last_ -> setNext(newNode); //Ultimo nodo actual apunta al nuevo nodo
             last_ = newNode;  // Se guarda el puntero al otro nodo 
-            if(!empty()){ //Si la lista esta vacia el nuevo nodo sera el primero y el ultimo elemento
+            if(!empty()){ //Si la lista esta vacia el nuevo nodo sera el primer y el ultimo elemento
                 first_ = newNode;
             }
             size_++; //Se increment el tamaño de la lista 
