@@ -92,7 +92,7 @@ class BST{
                 return search(node->getright(), value);
             }
 
-        }
+        } 
 
         public:
 
@@ -126,3 +126,5 @@ class BST{
 
 
 };
+
+//Faltaa 
