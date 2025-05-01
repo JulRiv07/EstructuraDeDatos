@@ -6,6 +6,7 @@ using namespace std;
 template <typename Type>
 class BinaryTree{
     private:
+.
 
         class Node{
             public:
