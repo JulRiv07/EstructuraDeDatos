@@ -128,6 +128,10 @@ private:
         nodo->setParent(x); // El nuevo padre del nodo orignal es 'x'
     }
 
+    /*
+        Esta función se encarga de reequilibrar el árbol después de insertar un nuevo nodo.
+        El nodo que se pasa como parámetro es el recién insertado.
+    */
     void fixInsert(Node* z) {
         while (z->getParent() && z->getParent()->getColor() == RED) {
             if (z->getParent() == z->getParent()->getParent()->getLeft()) {
