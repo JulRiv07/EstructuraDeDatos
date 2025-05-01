@@ -109,6 +109,12 @@ private:
         nodo->setParent(y); // Y el nuevo padre de 'nodo' será 'y'.
     }
 
+    /*
+        Se realiza una rotación a la derecha cuando un nodo tiene un hijo izquierdo rojo
+        que a su vez tiene un hijo izquierdo rojo, generando un desequilibrio a la izquierda.
+        La rotación permite subir al hijo izquierdo y mantener el balance del árbol.
+    */
+
 
     void rotateRight(Node* nodo) {
         Node* x = nodo->getLeft(); // Se crea un puntero 'x' que apunta a la izquierda del nodo original
@@ -132,60 +138,65 @@ private:
         Esta función se encarga de reequilibrar el árbol después de insertar un nuevo nodo.
         El nodo que se pasa como parámetro es el recién insertado.
     */
+
     void fixInsert(Node* z) {
-        while (z->getParent() && z->getParent()->getColor() == RED) {
-            if (z->getParent() == z->getParent()->getParent()->getLeft()) {
-                Node* y = z->getParent()->getParent()->getRight();
-                if (y && y->getColor() == RED) {
-                    z->getParent()->setColor(BLACK);
-                    y->setColor(BLACK);
-                    z->getParent()->getParent()->setColor(RED);
-                    z = z->getParent()->getParent();
+        while (z->getParent() && z->getParent()->getColor() == RED) { // Mientras que el nodo no sea la raiz y el padre sea rojo 
+            if (z->getParent() == z->getParent()->getParent()->getLeft()) { // Si el padre es hijo izquierdo
+                Node* y = z->getParent()->getParent()->getRight(); // Se crea un puntero 'y' que apunta al tio, el otro hijo del abuelo
+                if (y && y->getColor() == RED) { // Si el tio es rojo y no es nulo, entonces...
+                    z->getParent()->setColor(BLACK); // Se pinta el padre del nodo original de negro
+                    y->setColor(BLACK); // Se pinta el tio de negro 
+                    z->getParent()->getParent()->setColor(RED); // Se pinta de rojo el abuelo 
+                    z = z->getParent()->getParent(); //Subimos hasta el abuelo para seguir verificando
                 } else {
-                    if (z == z->getParent()->getRight()) {
-                        z = z->getParent();
-                        rotateLeft(z);
+                    if (z == z->getParent()->getRight()) { // Si es triangular
+                        z = z->getParent(); //subimos un nivel
+                        rotateLeft(z); //Se hace rotacion a la izquierda
                     }
-                    z->getParent()->setColor(BLACK);
-                    z->getParent()->getParent()->setColor(RED);
-                    rotateRight(z->getParent()->getParent());
+                    z->getParent()->setColor(BLACK); // se pinta el padre del nodo original de negro
+                    z->getParent()->getParent()->setColor(RED); // se pinta el abuelo del nodo original de rojo 
+                    rotateRight(z->getParent()->getParent()); // Se rota a la derecha mandando como atributo al abuelo del nodo original
                 }
-            } else {
-                Node* y = z->getParent()->getParent()->getLeft();
-                if (y && y->getColor() == RED) {
-                    z->getParent()->setColor(BLACK);
-                    y->setColor(BLACK);
-                    z->getParent()->getParent()->setColor(RED);
-                    z = z->getParent()->getParent();
+            } else { // Si no entonces el padre es hijo derecho
+                Node* y = z->getParent()->getParent()->getLeft(); // Se crea un puntero 'y' que apunta a el tio izquierdo 
+                if (y && y->getColor() == RED) { // Si 'y' no es nulo y es rojo
+                    z->getParent()->setColor(BLACK); // pinta el padre de negro
+                    y->setColor(BLACK);//pinta el tio de negro 
+                    z->getParent()->getParent()->setColor(RED);// pinta el abuelo de rojo 
+                    z = z->getParent()->getParent();// sube al abuelo para verificar lo demas
                 } else {
-                    if (z == z->getParent()->getLeft()) {
-                        z = z->getParent();
-                        rotateRight(z);
+                    if (z == z->getParent()->getLeft()) { // Si es triangular
+                        z = z->getParent();//Sube un nivel 
+                        rotateRight(z);// Se hace rotacion a la derecha
                     }
-                    z->getParent()->setColor(BLACK);
-                    z->getParent()->getParent()->setColor(RED);
-                    rotateLeft(z->getParent()->getParent());
+                    z->getParent()->setColor(BLACK); //Pinta el padre de negro
+                    z->getParent()->getParent()->setColor(RED); // Pinta el abuelo de rojo
+                    rotateLeft(z->getParent()->getParent()); // Hace rotacion a la izquierda mandando como atributo el abuelo
                 }
             }
         }
-        root_->setColor(BLACK);
+        root_->setColor(BLACK); // La raiz se pinta de negro, siempre!!!
     }
+
+    // Reemplaza el subárbol en la posición de u con el subárbol en la posición de v
 
     void transplant(Node* u, Node* v) {
-        if (u->getParent() == nullptr)
-            root_ = v;
-        else if (u == u->getParent()->getLeft())
-            u->getParent()->setLeft(v);
+        if (u->getParent() == nullptr) // Si u no tiene padre entonces es la raiz
+            root_ = v; // ahora v es la raiz 
+        else if (u == u->getParent()->getLeft()) // Si no, si 'u' es el hijo izquierdo...
+            u->getParent()->setLeft(v); //Ahora el hijo izquierdo será 'v'
         else
-            u->getParent()->setRight(v);
-        if (v != nullptr)
-            v->setParent(u->getParent());
+            u->getParent()->setRight(v); //Ahora el hijo derecho será 'v'
+        if (v != nullptr) //Si 'v' es nulo enrtonces...
+            v->setParent(u->getParent()); //El padre de 'v' será el padre de 'u'
     }
 
-    Node* minimum(Node* node) {
-        while (node->getLeft() != nullptr)
-            node = node->getLeft();
-        return node;
+    // Devuelve el nodo con el valor mínimo en el subárbol cuyo nodo raíz es 'node'
+ 
+    Node* minimum(Node* node) { 
+        while (node->getLeft() != nullptr) //Mientras no sea nulo a la izquierda...
+            node = node->getLeft(); //node baja a la izquierda buscando el menor
+        return node; // Retorna el nodo menor a la izquierda del subarbol
     }
 
     void fixDelete(Node* x) {
@@ -245,50 +256,59 @@ private:
         if (x) x->setColor(BLACK);
     }
 
-    Node* search(Node* node, const T& key) const {
-        if (node == nullptr || node->getData() == key)
-            return node;
-        if (key < node->getData())
-            return search(node->getLeft(), key);
-        else
-            return search(node->getRight(), key);
+    // Busca un nodo que contenga el valor 'data' en el árbol
+
+    Node* search(const T& data) const {
+        Node* current = root_; // Comenzamos desde la raíz
+        while (current != nullptr && data != current->getData()) { // Mientras no sea nulo y no sea igual al dato buscado, entonces...
+            if (data < current->getData()) {
+                current = current->getLeft(); // Si es menor, vamos a la izquierda
+            } else {
+                current = current->getRight(); // Si es mayor, vamos a la derecha
+            }
+        }   
+        return current; // Si lo encontramos, lo retornamos; si no, retorna nullptr
     }
 
-    void inorder(Node* node) const {
-        if (node != nullptr) {
-            inorder(node->getLeft());
-            cout << node->getData() << (node->getColor() == RED ? " (R) " : " (B) ");
-            inorder(node->getRight());
+    //Para imprimir el arbol (Igual que en el BST)
+
+    void inorder(Node* node) const { 
+        if (node != nullptr) { // Si el arbol todavia tiene elementos entonces
+            inorder(node->getLeft()); // Recursividad para ir recorriendo los elementos de la izquierda
+            cout << node->getData() << (node->getColor() == RED ? " (R) " : " (B) "); // Imprime los datos y el color que tenian
+            inorder(node->getRight());// Recursividad para ir recorriendo los elementos de la derecha
         }
     }
 
 public:
+
+    //Llamado del insert para el usuario 
     void insert(const T& data) {
-        Node* newNode = new Node(data);
-        Node* y = nullptr;
+        Node* newNode = new Node(data);// Se crea un nuevo nodo que almacenara el valor a insertar
+        Node* y = nullptr; // Se crean los punteros, 'y' como nulo y 'x' como la raiz
         Node* x = root_;
 
-        while (x != nullptr) {
-            y = x;
-            if (data < x->getData())
-                x = x->getLeft();
+        while (x != nullptr) { //Mientras 'x' no sea nulo entonces...
+            y = x; // Se iguala 'y' a 'x'
+            if (data < x->getData()) 
+                x = x->getLeft(); // Se va moviendo por la izquierda del arbol si es menor 
             else
-                x = x->getRight();
+                x = x->getRight();// Se va moviendo por la derecha del arbol si es menor 
         }
 
-        newNode->setParent(y);
-        if (y == nullptr)
-            root_ = newNode;
-        else if (data < y->getData())
-            y->setLeft(newNode);
+        newNode->setParent(y); //El padre de nuevo nodo será 'y'
+        if (y == nullptr) // Si no hay padre quiere decir que estaba vacio 
+            root_ = newNode; // Será la raiz
+        else if (data < y->getData()) // Si es menos que el padre...
+            y->setLeft(newNode); // Lo ponermos en la izquierda
         else
-            y->setRight(newNode);
+            y->setRight(newNode); // Si no, a la derecha
 
-        fixInsert(newNode);
+        fixInsert(newNode); //Se realizan todos los procesos necesarios para ubicar el nuevo nodo
     }
 
     void remove(const T& data) {
-        Node* z = search(root_, data);
+        Node* z = search(data);
         if (!z) return;
 
         Node* y = z;
@@ -321,23 +341,25 @@ public:
             fixDelete(x);
     }
 
-    void printInOrder() const {
-        inorder(root_);
+    //Imprime el arbol con el metodo inorder 
+
+    void printInOrder() const { 
+        inorder(root_); //Se llama el metodo con la raiz como atributo 
         cout << endl;
     }
 };
 
-int main() {
-    RBT<int> tree;
-    tree.insert(10);
+int main() { //Main funcion principal (Probar el codigo)
+    RBT<int> tree; //Se crea el arbol
+    //Insertar 5 elementos donde la raiz inicial es 10
+    tree.insert(10); 
     tree.insert(20);
     tree.insert(15);
     tree.insert(30);
     tree.insert(5);
-    tree.printInOrder();
+    tree.printInOrder(); // Iprimir el arbol actual 
 
-    tree.remove(15);
-    tree.printInOrder();
-
+    tree.remove(15); // Remover el 15 
+    tree.printInOrder(); // Iprimir el arbol actual 
     return 0;
 }
