@@ -199,61 +199,69 @@ private:
         return node; // Retorna el nodo menor a la izquierda del subarbol
     }
 
+    //Se encarga de mantener el balance y las propiedades del árbol después de una eliminación
+
     void fixDelete(Node* x) {
-        while (x != root_ && (x == nullptr || x->getColor() == BLACK)) {
-            if (x == x->getParent()->getLeft()) {
-                Node* w = x->getParent()->getRight();
-                if (w->getColor() == RED) {
-                    w->setColor(BLACK);
-                    x->getParent()->setColor(RED);
-                    rotateLeft(x->getParent());
-                    w = x->getParent()->getRight();
+        while (x != root_ && (x == nullptr || x->getColor() == BLACK)) { //Mientras que el nodo no sea la raiz y (Sea nulo o negro)
+            if (x == x->getParent()->getLeft()) { // Si 'x' es hijo izquierdo...
+                
+                Node* w = x->getParent()->getRight(); //Puntero que apunta al hermano a la derecha del nodo 'x'
+
+                if (w->getColor() == RED) { //Si el hermano es rojo 
+                    w->setColor(BLACK); // Se colorea el hermano de negro
+                    x->getParent()->setColor(RED); // Se pinta de rojo al padre de 'x' 
+                    rotateLeft(x->getParent()); // Se realiza rotacion a la izquierda mandando como atributo el papá
+                    w = x->getParent()->getRight(); // Actualiza al nuevo hermano derecho
                 }
-                if ((w->getLeft() == nullptr || w->getLeft()->getColor() == BLACK) &&
-                    (w->getRight() == nullptr || w->getRight()->getColor() == BLACK)) {
-                    w->setColor(RED);
-                    x = x->getParent();
+
+                if ((w->getLeft() == nullptr || w->getLeft()->getColor() == BLACK) && (w->getRight() == nullptr || w->getRight()->getColor() == BLACK)) {
+                // Si el nodo hermano es nulo a la izquierda o tiene un hijo negro a su izquierda y a la derecha se cumple lo mismo 
+                    w->setColor(RED); // Se pinta el hermano de rojo 
+                    x = x->getParent(); // 'x' Subimos al padre
                 } else {
-                    if (w->getRight() == nullptr || w->getRight()->getColor() == BLACK) {
-                        if (w->getLeft()) w->getLeft()->setColor(BLACK);
-                        w->setColor(RED);
-                        rotateRight(w);
-                        w = x->getParent()->getRight();
+                    if (w->getRight() == nullptr || w->getRight()->getColor() == BLACK) { // Si solo a la derecha del hermano es nulo o negro 
+                        if (w->getLeft()) { // Si tiene un hijo a la izquierda (Rojo)
+                            w->getLeft()->setColor(BLACK);  //Se pinta a negro el hijo izquierdo 
+                        } 
+                        w->setColor(RED); //Se pinta al hermano de rojo
+                        rotateRight(w);// Se rota a la derecha enviando 'w' como atributo 
+                        w = x->getParent()->getRight(); //Se actualiza el hermano al nuevo nodo derecho 
                     }
-                    w->setColor(x->getParent()->getColor());
-                    x->getParent()->setColor(BLACK);
-                    if (w->getRight()) w->getRight()->setColor(BLACK);
-                    rotateLeft(x->getParent());
-                    x = root_;
+                    w->setColor(x->getParent()->getColor());// 'w' se colorea del mismo color del padre de 'x'
+                    x->getParent()->setColor(BLACK); // Se pinta el padre de 'x' de color negro 
+                    if (w->getRight()) w->getRight()->setColor(BLACK); // Si tiene un hijo rojo a la derecha, entonces se pinta ese hijo de negro 
+                    rotateLeft(x->getParent()); // Se rota a la izquierda enviando como atributo el padre de x 
+                    x = root_; // Se declara 'x' como la raiz 
                 }
             } else {
-                Node* w = x->getParent()->getLeft();
-                if (w->getColor() == RED) {
-                    w->setColor(BLACK);
-                    x->getParent()->setColor(RED);
-                    rotateRight(x->getParent());
-                    w = x->getParent()->getLeft();
+                Node* w = x->getParent()->getLeft(); // Se crea un puntero que apunta al hermano a la izquierda del nodo 'x'
+                if (w->getColor() == RED) { // Si el hermano es rojo entonces...
+                    w->setColor(BLACK); //Se colorea el hermano de negro
+                    x->getParent()->setColor(RED); //Se colorea de rojo el padre del nodo 'x' 
+                    rotateRight(x->getParent()); // Se rota  a la derecha enviando el padre como atributo 
+                    w = x->getParent()->getLeft(); // Se actualiza al nuevo hermano del nodo 'x'
                 }
-                if ((w->getRight() == nullptr || w->getRight()->getColor() == BLACK) &&
-                    (w->getLeft() == nullptr || w->getLeft()->getColor() == BLACK)) {
-                    w->setColor(RED);
-                    x = x->getParent();
+                if ((w->getRight() == nullptr || w->getRight()->getColor() == BLACK) && (w->getLeft() == nullptr || w->getLeft()->getColor() == BLACK)) {
+                // Si tiene hijo a la derecha o si el hijo derecho es negro y si tiene hijo a la izquierda y si el hijo izquierdo es negro 
+                    w->setColor(RED); // Se colorea de rojo el hermano 
+                    x = x->getParent(); // Se sube la doble negrura al padre 
                 } else {
-                    if (w->getLeft() == nullptr || w->getLeft()->getColor() == BLACK) {
-                        if (w->getRight()) w->getRight()->setColor(BLACK);
-                        w->setColor(RED);
-                        rotateLeft(w);
-                        w = x->getParent()->getLeft();
+                    if (w->getLeft() == nullptr || w->getLeft()->getColor() == BLACK) { // Si el hermano no tiene hijo izquierdo o si el hijo izquierdo es negro 
+                        if (w->getRight()) w->getRight()->setColor(BLACK); // Si tiene hijo a la derecha, entonces se pinta de negro el hijo derecho 
+                        w->setColor(RED); // Se colorea el hermano de rojo 
+                        rotateLeft(w); // Se rota a la izquierda enviando el hermano como atributo 
+                        w = x->getParent()->getLeft(); // Se actualiza al nuevo hermano 
                     }
-                    w->setColor(x->getParent()->getColor());
-                    x->getParent()->setColor(BLACK);
-                    if (w->getLeft()) w->getLeft()->setColor(BLACK);
-                    rotateRight(x->getParent());
-                    x = root_;
+                    w->setColor(x->getParent()->getColor()); // Se colorea el hermano del color del padre 
+                    x->getParent()->setColor(BLACK); // Se colorea el padre de negro 
+                    if (w->getLeft()) w->getLeft()->setColor(BLACK); //Si el hermano tiene hijo izquierdo, entonces Se pinta de negro el hijo izquierdo
+                    rotateRight(x->getParent()); // Se rota enviando como atributo el padre 
+                    x = root_; // Se actualiza la raiz a 'x'
                 }
             }
         }
-        if (x) x->setColor(BLACK);
+
+        if (x) x->setColor(BLACK); // Si 'x' no es nulo, entonces se pinta de negro 
     }
 
     // Busca un nodo que contenga el valor 'data' en el árbol
@@ -307,38 +315,41 @@ public:
         fixInsert(newNode); //Se realizan todos los procesos necesarios para ubicar el nuevo nodo
     }
 
-    void remove(const T& data) {
-        Node* z = search(data);
-        if (!z) return;
+    //Llamado del remove para el usuario 
+    void remove(const T& data) {  // Se llama con el dato a borrar 
+        Node* z = search(data); // Busca si esta el dato en el arbol 
+        if (!z) return; // Si no esta entonces no retorna nada 
 
-        Node* y = z;
-        Color yOriginalColor = y->getColor();
-        Node* x;
-
-        if (z->getLeft() == nullptr) {
-            x = z->getRight();
-            transplant(z, z->getRight());
-        } else if (z->getRight() == nullptr) {
-            x = z->getLeft();
-            transplant(z, z->getLeft());
-        } else {
-            y = minimum(z->getRight());
-            yOriginalColor = y->getColor();
-            x = y->getRight();
-            if (y->getParent() == z) {
-                if (x) x->setParent(y);
-            } else {
-                transplant(y, y->getRight());
-                y->setRight(z->getRight());
-                y->getRight()->setParent(y);
+        Node* y = z; // 'y' es el nodo que se eliminará o que reemplazará a 'z'
+        Color yOriginalColor = y->getColor(); // Se guarda el color original de 'y'
+        Node* x = nullptr; // Este será el nodo que tomará el lugar de 'y' (el que sube)
+        if (z->getLeft() == nullptr) { // Si 'z' no tiene hijo izquierdo 
+            x = z->getRight();// 'x' es el nuevo hijo del padre de 'z'
+            transplant(z, z->getRight()); // Reemplazamos 'z' por su hijo derecho
+        } else if (z->getRight() == nullptr) { // Si no, si 'z' no tiene hijo derecho 
+            x = z->getLeft(); // 'x' es el nuevo hijo del padre de 'z'
+            transplant(z, z->getLeft()); // Se remplaza 'z' por su hijo izquierdo 
+        } else { // Si no...
+            y = minimum(z->getRight()); // Se busca el minimo, el sucesor 
+            yOriginalColor = y->getColor(); // sE guarda el color del sucesor 
+            x = y->getRight(); // x será el hijo derecho del sucesor 
+            if (y->getParent() == z) { // Si 'y' es el hijo de 'z'
+                if (x) x->setParent(y); //Si 'x' no es nulo entonces su padré será 'y'
+            } else { // Si no...
+                transplant(y, y->getRight()); //Se cambia y por su hijo derecho 
+                y->setRight(z->getRight()); // Se guarda como hijo derecho de 'y' a la derecha de 'z'
+                y->getRight()->setParent(y); // Se actualiza el padre del nuevo hijo derecho de 'y'
             }
-            transplant(z, y);
-            y->setLeft(z->getLeft());
-            y->getLeft()->setParent(y);
-            y->setColor(z->getColor());
+            transplant(z, y); // Se remplaza 'z' por 'y' 
+            y->setLeft(z->getLeft()); // Se guarda como hijo izquierdo el hijo izquierdo de 'z'
+            y->getLeft()->setParent(y); // Se actualiza el padre del nuevo hijo izquierdo de 'y'
+            y->setColor(z->getColor()); // Se guarda 'y' con el color de 'z' 
         }
-        if (yOriginalColor == BLACK && x != nullptr)
-            fixDelete(x);
+
+        delete z; // Borramos el nodo original
+
+        if (yOriginalColor == BLACK && x != nullptr) //Si el color original era negro entonces...
+            fixDelete(x); // Se repara el arbol de ser necesario
     }
 
     //Imprime el arbol con el metodo inorder 
@@ -347,7 +358,7 @@ public:
         inorder(root_); //Se llama el metodo con la raiz como atributo 
         cout << endl;
     }
-};
+};+
 
 int main() { //Main funcion principal (Probar el codigo)
     RBT<int> tree; //Se crea el arbol
