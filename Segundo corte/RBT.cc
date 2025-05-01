@@ -80,46 +80,52 @@ private:
 
     Node* root_ = nullptr; //Declara la raiz como un puntero nulo de tipo Node
 
-    /* 
+    /*
         Se realiza una rotación a la izquierda cuando un nodo tiene un hijo derecho rojo
         que a su vez tiene un hijo derecho rojo, generando un desequilibrio a la derecha.
         La rotación permite subir al hijo derecho y mantener el balance del árbol.
     */
 
     void rotateLeft(Node* nodo) {
-        Node* y = nodo->getRight();
-        nodo->setRight(y->getLeft());
-        if (y->getLeft() != nullptr)
-            y->getLeft()->setParent(nodo);
+        Node* y = nodo->getRight(); // Se crea un puntero 'y' apuntando al hijo derecho del nodo original. 
 
-        y->setParent(nodo->getParent());
+        nodo->setRight(y->getLeft());  // El hijo izquierdo de 'y' se convierte en el nuevo hijo derecho de 'nodo'. 
+        // (porque 'nodo' baja a la izquierda de 'y')
+
+        if (y->getLeft() != nullptr) // Si ese nuevo hijo derecho (antes hijo izquierdo de 'y') no es nulo, 
+            y->getLeft()->setParent(nodo); // se actualiza su padre a 'nodo'.
+
+        y->setParent(nodo->getParent()); // 'y' hereda el padre del nodo original.
+
         if (nodo->getParent() == nullptr)
-            root_ = y;
+            root_ = y; // Si el nodo original era la raíz, entonces ahora 'y' se convierte en la nueva raíz.
         else if (nodo == nodo->getParent()->getLeft())
-            nodo->getParent()->setLeft(y);
+            nodo->getParent()->setLeft(y); // Si el nodo original era hijo izquierdo, ahora su padre apuntará a 'y' como hijo izquierdo.
         else
-            nodo->getParent()->setRight(y);
+            nodo->getParent()->setRight(y); // Si era hijo derecho, el padre apuntará a 'y' como hijo derecho.
 
-        y->setLeft(nodo);
-        nodo->setParent(y);
+        y->setLeft(nodo); // 'nodo' se convierte en hijo izquierdo de 'y'.
+
+        nodo->setParent(y); // Y el nuevo padre de 'nodo' será 'y'.
     }
 
+
     void rotateRight(Node* nodo) {
-        Node* x = nodo->getLeft();
-        nodo->setLeft(x->getRight());
-        if (x->getRight() != nullptr)
-            x->getRight()->setParent(nodo);
+        Node* x = nodo->getLeft(); // Se crea un puntero 'x' que apunta a la izquierda del nodo original
+        nodo->setLeft(x->getRight()); //El nodo original guarda a la izquierda la derecha de 'x'
+        if (x->getRight() != nullptr) // Si la derecha de 'x' no es nula entonces...
+            x->getRight()->setParent(nodo); // La derecha de 'x' guarda como padre el nodo original 
 
-        x->setParent(nodo->getParent());
-        if (nodo->getParent() == nullptr)
-            root_ = x;
-        else if (nodo == nodo->getParent()->getRight())
-            nodo->getParent()->setRight(x);
+        x->setParent(nodo->getParent()); // 'x' uarda como padre el padre del nodo original 
+        if (nodo->getParent() == nullptr) //Si el nodo original no tiene padre entonces...
+            root_ = x; // 'x' se vuelve la raiz
+        else if (nodo == nodo->getParent()->getRight())// Si no, si el nodo original era hijo derecho entonces...
+            nodo->getParent()->setRight(x); // Ahora su padre apuntará a 'x' como hijo derecho
         else
-            nodo->getParent()->setLeft(x);
+            nodo->getParent()->setLeft(x); // Su padre apuntará a 'x' como hijo izquierdo
 
-        x->setRight(nodo);
-        nodo->setParent(x);
+        x->setRight(nodo); // 'x' guarda a su derecha el nodo original 
+        nodo->setParent(x); // El nuevo padre del nodo orignal es 'x'
     }
 
     void fixInsert(Node* z) {
