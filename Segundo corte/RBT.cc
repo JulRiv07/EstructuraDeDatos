@@ -122,7 +122,7 @@ private:
         if (x->getRight() != nullptr) // Si la derecha de 'x' no es nula entonces...
             x->getRight()->setParent(nodo); // La derecha de 'x' guarda como padre el nodo original 
 
-        x->setParent(nodo->getParent()); // 'x' uarda como padre el padre del nodo original 
+        x->setParent(nodo->getParent()); // 'x' guarda como padre el padre del nodo original 
         if (nodo->getParent() == nullptr) //Si el nodo original no tiene padre entonces...
             root_ = x; // 'x' se vuelve la raiz
         else if (nodo == nodo->getParent()->getRight())// Si no, si el nodo original era hijo derecho entonces...
@@ -334,7 +334,9 @@ public:
             yOriginalColor = y->getColor(); // sE guarda el color del sucesor 
             x = y->getRight(); // x será el hijo derecho del sucesor 
             if (y->getParent() == z) { // Si 'y' es el hijo de 'z'
-                if (x) x->setParent(y); //Si 'x' no es nulo entonces su padré será 'y'
+                if (x){
+                    x->setParent(y); //Si 'x' no es nulo entonces su padré será 'y'
+                }
             } else { // Si no...
                 transplant(y, y->getRight()); //Se cambia y por su hijo derecho 
                 y->setRight(z->getRight()); // Se guarda como hijo derecho de 'y' a la derecha de 'z'
@@ -358,19 +360,25 @@ public:
         inorder(root_); //Se llama el metodo con la raiz como atributo 
         cout << endl;
     }
-};+
+};
 
 int main() { //Main funcion principal (Probar el codigo)
     RBT<int> tree; //Se crea el arbol
     //Insertar 5 elementos donde la raiz inicial es 10
-    tree.insert(10); 
+    tree.insert(17);
+    tree.insert(14);
+    tree.insert(15); 
+    tree.insert(12);
+    tree.insert(13);
+    tree.insert(11);
+    tree.insert(19);
+    tree.insert(18);
     tree.insert(20);
-    tree.insert(15);
-    tree.insert(30);
-    tree.insert(5);
+    tree.insert(21);
+    
     tree.printInOrder(); // Iprimir el arbol actual 
 
-    tree.remove(15); // Remover el 15 
+    tree.remove(20); // Remover el 15 
     tree.printInOrder(); // Iprimir el arbol actual 
     return 0;
 }

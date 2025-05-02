@@ -6,9 +6,10 @@
 
 using namespace std;
 
-// Plantilla para un Heap Máximo basado en prioridad aleatoria
+// Tipo de dato que tomará el heap
 template <typename T>
-class HeapMax {
+//Clase HeapMax: Buscara el elemento con mayor prioridad en el vector 
+class HeapMax { 
 private:
     vector<pair<int, T>> heap;       // par: <prioridad, valor>
     mt19937 rng;                     // generador random
@@ -144,18 +145,31 @@ public:
 
 
 int main() {
-    HeapMin<string> heap;
+    HeapMin<string> heapm;
 
-    heap.insert("perro");
-    heap.insert("gato");
-    heap.insert("pájaro");
-    heap.insert("elefante");
+    heapm.insert("perro");
+    heapm.insert("gato");
+    heapm.insert("pájaro");
+    heapm.insert("elefante");
 
-    heap.printHeap();
+    heapm.printHeap();
 
-    cout << "Elemento con mayor prioridad: " << heap.extractMin() << "\n";
+    cout << "Elemento con menor prioridad: " << heapm.extractMin()<< "\n";
 
-    heap.printHeap();
+    heapm.printHeap();
+
+    HeapMax<string> heapM;
+
+    heapM.insert("Carro");
+    heapM.insert("Moto");
+    heapM.insert("Avion");
+    heapM.insert("Barco");
+
+    heapM.printHeap();
+    cout << "Elemento con mayor prioridad: " << heapM.extractMax() << "\n";
+
+
+    heapM.printHeap();
 
     return 0;
 }
