@@ -1,10 +1,10 @@
-#include <iostream>
+#include <iostream> 
 #include <random>
 #include <ctime>
 #include <cmath>      
 #include <algorithm> 
 
-template<typename KeyType, typename ValueType>
+template<typename KeyType, typename ValueType> 
 class Treap {
 private:
     class TreapNode {
