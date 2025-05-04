@@ -17,7 +17,8 @@ class HeapMax {
 
         //Nantiene la propiedad de Heap maximo
         void heapifyUp(int index) { // Recibe como parametro el indice del nodo 
-            while (index > 0 && heap[parent(index)].first < heap[index].first) { // Mientras que el indice sea mayor que 0 y el padre sea menor al elemento en dicho indice
+            while (index > 0 && heap[parent(index)].first < heap[index].first) { 
+                // Mientras que el indice sea mayor que 0 y el padre sea menor al elemento en dicho indice
                 swap(heap[index], heap[parent(index)]); // Intercambia el hijo (Elemento en el indice) con el padre 
                 index = parent(index); // Se modifica el indice a la posicion del padre
             } 
