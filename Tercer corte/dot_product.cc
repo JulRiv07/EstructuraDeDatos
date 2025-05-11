@@ -5,10 +5,10 @@ using namespace std;
 int docprod(const vector<int> &a, const vector<int> &b){
     int result = 0;
 
-    for(int i = 0; i < a.size(); i++){
+    for(size_t  i = 0; i < a.size(); i++){
         result += a[i] * b[i];
     }
-
+ 
     return result;
 }
 
@@ -17,7 +17,7 @@ int main(){
     int n;
 
     cout << "Hi! if you want calculate the dot product your vectors must have the same cardinality..."
-          << "So, how many elements you want to add in the vectors?:";
+          << "So, how many elements you want to add in the vectors?: ";
 
     cin >> n;
 
