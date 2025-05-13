@@ -5,7 +5,7 @@ using namespace std;
 int docprod(const vector<int> &a, const vector<int> &b){
     int result = 0;
 
-    for(size_t  i = 0; i < a.size(); i++){
+    for(size_t i = 0; i < a.size(); i++){
         result += a[i] * b[i];
     }
  
