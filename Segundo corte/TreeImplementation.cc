@@ -73,12 +73,30 @@ class BinaryTree{
 
         }
 
-        void inorder(Node* node) {
-            if (node == nullptr) return;  
-            inorder(node->getleft());         
-            cout << node->getdata() << " ";    
-            inorder(node->getright()); 
+        //  Orden methods
+        void in_order(Node *nodo){
+            if (nodo == nullptr) return;
+            in_order(nodo->getleft());
+            cout << nodo->getdata() << " ";
+            in_order(nodo->getright());
         }
+
+        void pre_order(Node *nodo){
+            if (nodo == nullptr ) return;
+            cout << nodo->getdata() << " ";
+            pre_order(nodo->getleft());
+            pre_order(nodo->getright());
+        }
+
+        
+        void post_order(Node *nodo){
+            if (nodo == nullptr) return;
+            post_order(nodo->getleft());
+            post_order(nodo->getright());
+            cout << nodo->getdata() << " ";
+        }
+        
+
 
         bool BST(Node *root, T const value) {
             if (root == nullptr) {
