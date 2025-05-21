@@ -8,15 +8,13 @@
 
 using namespace std;
 
-// Clase KMeans para realizar clustering
 class KMeans {
 private:
-    int k; // Número de clusters
+    int k;
     int maxIteraciones;
     vector<vector<double>> centroides;
     vector<int> etiquetas;
 
-    // Calcula la distancia Euclidiana entre dos puntos
     double distanciaEuclidiana(const vector<double>& a, const vector<double>& b) {
         double suma = 0.0;
         for (size_t i = 0; i < a.size(); i++) {
@@ -25,7 +23,6 @@ private:
         return sqrt(suma);
     }
 
-    // Inicializa los centroides aleatoriamente desde los datos
     void inicializarCentroides(const vector<vector<double>>& datos) {
         centroides.clear();
         random_device rd;
@@ -38,13 +35,11 @@ private:
     }
 
 public:
-    // Constructor
     KMeans(int numClusters, int iteraciones) {
         k = numClusters;
         maxIteraciones = iteraciones;
     }
 
-    // Método principal para ajustar el modelo a los datos
     void ajustar(const vector<vector<double>>& datos) {
         int n = datos.size();
         etiquetas.resize(n);
@@ -52,7 +47,6 @@ public:
         inicializarCentroides(datos);
 
         for (int iter = 0; iter < maxIteraciones; iter++) {
-            // Paso 1: Asignar cada punto al centroide más cercano
             for (int i = 0; i < n; i++) {
                 double minDistancia = numeric_limits<double>::max();
                 int etiqueta = 0;
@@ -66,7 +60,7 @@ public:
                 etiquetas[i] = etiqueta;
             }
 
-            // Paso 2: Recalcular los centroides
+            
             vector<vector<double>> nuevosCentroides(k, vector<double>(datos[0].size(), 0.0));
             vector<int> cuenta(k, 0);
 
@@ -89,7 +83,7 @@ public:
         }
     }
 
-    // Muestra los resultados del clustering
+    
     void mostrarResultados() {
         cout << "Centroides encontrados:\n";
         for (int i = 0; i < k; i++) {
@@ -108,7 +102,6 @@ public:
     }
 };
 
-// Función para leer CSV e ignorar columnas no numéricas (como el género)
 vector<vector<double>> leerCSV(const string& nombreArchivo) {
     vector<vector<double>> datos;
     ifstream archivo(nombreArchivo);
@@ -135,7 +128,6 @@ vector<vector<double>> leerCSV(const string& nombreArchivo) {
                 fila.push_back(gasto);
                 datos.push_back(fila);
             } catch (...) {
-                // Saltar si hay encabezado o datos inválidos
                 continue;
             }
         }
@@ -146,8 +138,8 @@ vector<vector<double>> leerCSV(const string& nombreArchivo) {
 }
 
 int main() {
-    string archivo = "Mall_Customers.csv"; // Asegúrate de que este nombre coincida con tu archivo
-    int k = 3; // Número de clusters deseados
+    string archivo = "Mall_Customers.csv"; 
+    int k = 3; 
 
     vector<vector<double>> datos = leerCSV(archivo);
 
