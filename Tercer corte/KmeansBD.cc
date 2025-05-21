@@ -1,156 +1,163 @@
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <sstream>
-#include <cmath>
-#include <limits>
-#include <random>
+#include <iostream>     // For input and output operations
+#include <vector>       // For using the vector container
+#include <fstream>      // For file reading
+#include <sstream>      // For string stream manipulation
+#include <cmath>        // For mathematical functions like pow and sqrt
+#include <limits>       // For numeric limits (e.g., max double value)
+#include <random>       // For random number generation
 
 using namespace std;
 
+// KMeans clustering algorithm class
 class KMeans {
 private:
-    int k;
-    int maxIteraciones;
-    vector<vector<double>> centroides;
-    vector<int> etiquetas;
+    int k; // Number of clusters
+    int maxIterations; // Maximum number of iterations to run the algorithm
+    vector<vector<double>> centroids; // Coordinates of cluster centroids
+    vector<int> labels; // Cluster assignments for each data point
 
-    double distanciaEuclidiana(const vector<double>& a, const vector<double>& b) {
-        double suma = 0.0;
+    // Calculates the Euclidean distance between two points (vectors)
+    double euclideanDistance(const vector<double>& a, const vector<double>& b) {
+        double sum = 0.0;
         for (size_t i = 0; i < a.size(); i++) {
-            suma += pow(a[i] - b[i], 2);
+            sum += pow(a[i] - b[i], 2);
         }
-        return sqrt(suma);
+        return sqrt(sum);
     }
 
-    void inicializarCentroides(const vector<vector<double>>& datos) {
-        centroides.clear();
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_int_distribution<> distrib(0, datos.size() - 1);
+    void initializeCentroids(const vector<vector<double>>& data) {
+        centroids.clear();
+        random_device rd; // Obtain a seed for the random number engine
+        mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+        uniform_int_distribution<> distrib(0, data.size() - 1); // Uniform distribution over data size
 
+        // Pick k random data points as initial centroids
         for (int i = 0; i < k; i++) {
-            centroides.push_back(datos[distrib(gen)]);
+            centroids.push_back(data[distrib(gen)]);
         }
     }
 
 public:
-    KMeans(int numClusters, int iteraciones) {
+
+    KMeans(int numClusters, int iterations) {
         k = numClusters;
-        maxIteraciones = iteraciones;
+        maxIterations = iterations;
     }
 
-    void ajustar(const vector<vector<double>>& datos) {
-        int n = datos.size();
-        etiquetas.resize(n);
+    void fit(const vector<vector<double>>& data) {
+        int n = data.size(); // Number of data points
+        labels.resize(n); // Resize label array to match number of points
 
-        inicializarCentroides(datos);
+        initializeCentroids(data); // Randomly initialize centroids
 
-        for (int iter = 0; iter < maxIteraciones; iter++) {
+        for (int iter = 0; iter < maxIterations; iter++) {
             for (int i = 0; i < n; i++) {
-                double minDistancia = numeric_limits<double>::max();
-                int etiqueta = 0;
+                double minDistance = numeric_limits<double>::max(); // Initialize to maximum double
+                int label = 0;
+
+                // Check distance to each centroid
                 for (int j = 0; j < k; j++) {
-                    double d = distanciaEuclidiana(datos[i], centroides[j]);
-                    if (d < minDistancia) {
-                        minDistancia = d;
-                        etiqueta = j;
+                    double d = euclideanDistance(data[i], centroids[j]);
+                    if (d < minDistance) {
+                        minDistance = d;
+                        label = j;
                     }
                 }
-                etiquetas[i] = etiqueta;
+                labels[i] = label; // Assign closest centroid
             }
 
-            
-            vector<vector<double>> nuevosCentroides(k, vector<double>(datos[0].size(), 0.0));
-            vector<int> cuenta(k, 0);
+            vector<vector<double>> newCentroids(k, vector<double>(data[0].size(), 0.0));
+            vector<int> count(k, 0); // Count of points in each cluster
 
+            // Sum all data points in each cluster
             for (int i = 0; i < n; i++) {
-                int etiqueta = etiquetas[i];
-                for (size_t j = 0; j < datos[i].size(); j++) {
-                    nuevosCentroides[etiqueta][j] += datos[i][j];
+                int label = labels[i];
+                for (size_t j = 0; j < data[i].size(); j++) {
+                    newCentroids[label][j] += data[i][j];
                 }
-                cuenta[etiqueta]++;
+                count[label]++;
             }
 
             for (int j = 0; j < k; j++) {
-                if (cuenta[j] == 0) continue;
-                for (size_t d = 0; d < nuevosCentroides[j].size(); d++) {
-                    nuevosCentroides[j][d] /= cuenta[j];
+                if (count[j] == 0) continue; 
+                for (size_t d = 0; d < newCentroids[j].size(); d++) {
+                    newCentroids[j][d] /= count[j];
                 }
             }
 
-            centroides = nuevosCentroides;
+            // Update centroids for the next iteration
+            centroids = newCentroids;
         }
     }
 
-    
-    void mostrarResultados() {
-        cout << "Centroides encontrados:\n";
+    void showResults() {
+        cout << "Centroids found:\n";
         for (int i = 0; i < k; i++) {
             cout << "Cluster " << i + 1 << ": ";
-            for (double valor : centroides[i]) {
-                cout << valor << " ";
+            for (double value : centroids[i]) {
+                cout << value << " ";
             }
             cout << endl;
         }
 
-        cout << "\nEtiquetas asignadas:\n";
-        for (int etiqueta : etiquetas) {
-            cout << etiqueta << " ";
+        cout << "\nAssigned labels:\n";
+        for (int label : labels) {
+            cout << label << " ";
         }
         cout << endl;
     }
 };
 
-vector<vector<double>> leerCSV(const string& nombreArchivo) {
-    vector<vector<double>> datos;
-    ifstream archivo(nombreArchivo);
-    string linea;
+vector<vector<double>> readCSV(const string& filename) {
+    vector<vector<double>> data;
+    ifstream file(filename);
+    string line;
 
-    while (getline(archivo, linea)) {
-        stringstream ss(linea);
-        string celda;
-        vector<string> columnas;
-        vector<double> fila;
+    // Read each line from the CSV
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string cell;
+        vector<string> columns;
+        vector<double> row;
 
-        while (getline(ss, celda, ',')) {
-            columnas.push_back(celda);
+        // Split line by commas
+        while (getline(ss, cell, ',')) {
+            columns.push_back(cell);
         }
 
-        if (columnas.size() >= 5) {
+        if (columns.size() >= 5) {
             try {
-                double edad = stod(columnas[2]);
-                double ingreso = stod(columnas[3]);
-                double gasto = stod(columnas[4]);
+                double age = stod(columns[2]);       
+                double income = stod(columns[3]);    
+                double spending = stod(columns[4]);
 
-                fila.push_back(edad);
-                fila.push_back(ingreso);
-                fila.push_back(gasto);
-                datos.push_back(fila);
+                row.push_back(age);
+                row.push_back(income);
+                row.push_back(spending);
+                data.push_back(row);
             } catch (...) {
                 continue;
             }
         }
     }
 
-    archivo.close();
-    return datos;
+    file.close(); // Close the file
+    return data;
 }
 
 int main() {
-    string archivo = "Mall_Customers.csv"; 
+    string filename = "Mall_Customers.csv";  
     int k = 3; 
 
-    vector<vector<double>> datos = leerCSV(archivo);
-
-    if (datos.empty()) {
-        cerr << "No se pudieron cargar los datos. Verifica el archivo." << endl;
+    vector<vector<double>> data = readCSV(filename);
+    if (data.empty()) {
+        cerr << "Failed to load data. Please check the file." << endl;
         return 1;
     }
 
     KMeans kmeans(k, 100);
-    kmeans.ajustar(datos);
-    kmeans.mostrarResultados();
+    kmeans.fit(data);
+    kmeans.showResults();
 
     return 0;
 }
