@@ -85,8 +85,11 @@ public:
     }
 };
 
+// Test of functionality
+
 int main()
 {
+    
     Graph g(4);
     g.add_edge(0, 1, 2);
     g.add_edge(1, 2, 3);
