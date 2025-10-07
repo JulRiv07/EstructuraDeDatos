@@ -1,6 +1,6 @@
 #include <iostream>
 
-
+using namespace std;
 
 int main() {
     cout<<"1. Toda variable ocupa un lugar en la memoria." << endl;

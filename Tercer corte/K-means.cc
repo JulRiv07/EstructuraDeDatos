@@ -1,4 +1,4 @@
-#include <iostream>
+    #include <iostream>
 #include <vector>
 #include <cmath>
 using namespace std;
@@ -105,6 +105,7 @@ private:
     vector<Cluster> clusters;      // Los clusters
 
 public:
+
     /**
      * Constructor: recibe el número de clusters y los puntos de entrada.
      */

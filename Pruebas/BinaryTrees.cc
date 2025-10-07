@@ -6,18 +6,16 @@ using namespace std;
 template <typename Type>
 class BinaryTree{
     private:
-.
-
         class Node{
             public:
-                Node *left;
+                Node *left
                 Node *right;
                 Type data;
             
                 Node() {
                     left = nullptr;
                     right = nullptr;
-                    data = Type();
+                    data = Type;
                 }
         };
 
